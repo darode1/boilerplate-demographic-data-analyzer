@@ -21,20 +21,26 @@ def calculate_demographic_data(print_data=True):
 
     # with and without `Bachelors`, `Masters`, or `Doctorate`
     education_salary = df.loc[:, ["education", "salary"]]
-    higher_education = None
-    lower_education = None
+    advanced = df.loc[ (df["education"] == "Bachelors") | (df["education"] == "Masters") | (df["education"] == "Doctorate")]
+    advanced_more = df.loc[((df["education"] == "Bachelors") | (df["education"] == "Masters") | (df["education"]  == "Doctorate"))  & (df["salary"] == ">50K")]
+    
+    lower = df.loc[ (df["education"] !="Bachelors") & (df["education"] !="Masters") & (df["education"] !="Doctorate")]
+    lower_more = lower.loc[lower["salary"] == ">50K"]
+    
+    higher_education = len(advanced)/len(df)
+    lower_education = len(lower)/len(df)
 
     # percentage with salary >50K
-    higher_education_rich = None
-    lower_education_rich = None
+    higher_education_rich = len(advanced_more)/len(advanced)
+    lower_education_rich = len(lower_more)/len(lower)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
-    min_work_hours = None
+    min_work_hours = df["hours-per-week"].min()
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
-    num_min_workers = None
+    num_min_workers = len(df.loc[df["hours-per-week"] == min_work_hours])
 
-    rich_percentage = None
+    rich_percentage = len(df.loc[ (df["hours-per-week"] == min_work_hours) & (df["salary"] == ">50K" )]) / num_min_workers
 
     # What country has the highest percentage of people that earn >50K?
     highest_earning_country = None
